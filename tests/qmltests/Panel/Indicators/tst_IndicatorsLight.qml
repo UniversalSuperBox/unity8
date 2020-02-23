@@ -19,6 +19,7 @@ import QtQuick.Layouts 1.1
 import Unity.Test 0.1 as UT
 import Unity.Indicators 0.1 as Indicators
 import Ubuntu.Components 1.3
+import GSettings 1.0
 import Powerd 0.1
 import Lights 0.1
 import QMenuModel 0.1
@@ -59,6 +60,11 @@ Item {
     Component.onCompleted: {
         ActionData.data = newMessage;
         Powerd.setStatus(Powerd.On, Powerd.Unknown);
+    }
+
+    GSettings {
+        id: unity8settings
+        schema.id: "com.canonical.Unity8.LedIndication"
     }
 
     RowLayout {
@@ -155,6 +161,8 @@ Item {
             ActionData.data = noNewMessage;
             loader.sourceComponent = undefined;
             loader.sourceComponent = light;
+            Powerd.setStatus(Powerd.On, Powerd.Unknown);
+            unity8settings.chargingStateVisible = true;
         }
 
         function test_LightsStatus_data() {
@@ -265,6 +273,14 @@ Item {
                 { tag: "Powerd.Off while charging & no support for multicolor led",
                   expectedLightsState: Lights.Off,
                       powerd: Powerd.Off, actionData: deviceStateDBusSignals.charging, supportsMultiColorLed: false },
+                // disabled charging state visible
+                //
+                { tag: "Powerd.Off with New Message & chargingStateVisible=false",
+                  expectedLightsState: Lights.On,
+                      powerd: Powerd.Off, actionData: newMessage, chargingStateVisible: false },
+                { tag: "Powerd.Off while charging & chargingStateVisible=false",
+                  expectedLightsState: Lights.Off,
+                      powerd: Powerd.Off, actionData: deviceStateDBusSignals.charging, chargingStateVisible: false },
             ]
         }
 
@@ -273,6 +289,8 @@ Item {
 
             if (data.hasOwnProperty("supportsMultiColorLed"))
                 loader.item.supportsMultiColorLed = data.supportsMultiColorLed
+            if (data.hasOwnProperty("chargingStateVisible"))
+                unity8settings.chargingStateVisible = data.chargingStateVisible
             if (data.hasOwnProperty("powerd"))
                 Powerd.setStatus(data.powerd, Powerd.Unknown)
             if (data.hasOwnProperty("actionData"))
