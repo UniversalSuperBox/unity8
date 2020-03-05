@@ -50,8 +50,8 @@ QtObject {
         updateLightState("onSupportsMultiColorLedChanged")
     }
 
-    property var _unity8Settings: GSettings {
-        schema.id: "com.canonical.Unity8.LedIndication"
+    property var _lomiriSettings: GSettings {
+        schema.id: "com.lomiri.LedIndication"
         onChanged: {
             root.updateLightState("onChanged (settings)")
         }
@@ -67,14 +67,12 @@ QtObject {
 
     function updateLightState(msg) {
         console.log("updateLightState: " + msg
-            + ", indicatorState: " + indicatorState
-            + ", supportsMultiColorLed: " + supportsMultiColorLed
             + ", hasMessages: " + hasMessages
             + ", icon: " + batteryIconName
             + ", displayStatus: " + displayStatus
             + ", deviceState: " + deviceState
-            + ", batteryLevel: " + batteryLevel,
-            + ", chargingStateVisible: " + _unity8Settings.chargingStateVisible)
+            + ", batteryLevel: " + batteryLevel
+            + ", chargingStateVisible: " + _lomiriSettings.chargingStateVisible)
 
         //
         // If charging state visibility is disabled then only show messages.
@@ -131,7 +129,7 @@ console.log("no support for Multicolor LED. " + indicatorState)
         }
 
 	    // if charging state is not to be shown set led off
-        if(!_unity8Settings.chargingStateVisible) {
+        if(!_lomiriSettings.chargingStateVisible) {
             indicatorState = "INDICATOR_OFF"
             return
 	    }

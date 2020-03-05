@@ -63,8 +63,8 @@ Item {
     }
 
     GSettings {
-        id: unity8settings
-        schema.id: "com.canonical.Unity8.LedIndication"
+        id: lomiriSettings
+        schema.id: "com.lomiri.LedIndication"
     }
 
     RowLayout {
@@ -162,7 +162,7 @@ Item {
             loader.sourceComponent = undefined;
             loader.sourceComponent = light;
             Powerd.setStatus(Powerd.On, Powerd.Unknown);
-            unity8settings.chargingStateVisible = true;
+            lomiriSettings.chargingStateVisible = true;
         }
 
         function test_LightsStatus_data() {
@@ -290,7 +290,7 @@ Item {
             if (data.hasOwnProperty("supportsMultiColorLed"))
                 loader.item.supportsMultiColorLed = data.supportsMultiColorLed
             if (data.hasOwnProperty("chargingStateVisible"))
-                unity8settings.chargingStateVisible = data.chargingStateVisible
+                lomiriSettings.chargingStateVisible = data.chargingStateVisible
             if (data.hasOwnProperty("powerd"))
                 Powerd.setStatus(data.powerd, Powerd.Unknown)
             if (data.hasOwnProperty("actionData"))
